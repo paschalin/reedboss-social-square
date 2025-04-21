@@ -6,6 +6,7 @@ import { LoginForm } from '@/components/LoginForm';
 import { Post } from '@/components/Post';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
 
 const fetchPosts = async () => {
   const response = await fetch('https://dummyjson.com/posts');
@@ -20,23 +21,19 @@ const Index = () => {
     queryFn: fetchPosts,
   });
 
-  if (authLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <LoginForm />
-      </div>
-    );
-  }
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <ReedbossSidebar />
         <main className="flex-1 max-w-2xl mx-auto p-4 md:p-6">
+          {!user && (
+            <div className="mb-6 p-4 bg-primary/5 rounded-lg">
+              <p className="mb-2">Want to interact with posts? Sign in to your account!</p>
+              <Button onClick={() => document.getElementById('login-dialog')?.showModal()}>
+                Sign In
+              </Button>
+            </div>
+          )}
           <h2 className="text-xl font-semibold mb-6">Your Feed</h2>
           {postsLoading ? (
             <div>Loading posts...</div>
@@ -49,8 +46,12 @@ const Index = () => {
           )}
         </main>
       </div>
+      <dialog id="login-dialog" className="rounded-lg p-0">
+        <LoginForm />
+      </dialog>
     </SidebarProvider>
   );
 };
 
 export default Index;
+
