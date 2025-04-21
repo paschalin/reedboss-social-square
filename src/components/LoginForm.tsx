@@ -62,8 +62,8 @@ export function LoginForm() {
           Use these demo credentials to login:
         </p>
         <div className="text-sm text-center text-primary font-mono bg-gray-50 p-2 rounded">
-          <div>Username: <span className="font-bold">atuny0</span></div>
-          <div>Password: <span className="font-bold">9uQFF1Lh</span></div>
+          <div>Username: <span className="font-bold">kminchelle</span></div>
+          <div>Password: <span className="font-bold">0lelplR</span></div>
         </div>
       </form>
     </Card>

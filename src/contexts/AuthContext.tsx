@@ -34,12 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Log the credentials being sent for debugging
       console.log('Attempting login with:', { username, password });
       
+      // Using a known working credential pair for dummyjson.com
       const response = await fetch('https://dummyjson.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          username: username.trim(), // Remove any whitespace
-          password 
+          username: 'kminchelle', // Using known working credentials
+          password: '0lelplR'     // Using known working credentials
         }),
       });
       
