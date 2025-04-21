@@ -15,8 +15,11 @@ interface PostProps {
 }
 
 export function Post({ post }: PostProps) {
-  const [likes, setLikes] = useState(post.reactions);
+  const [likes, setLikes] = useState(post.reactions || 0);
   const [isLiked, setIsLiked] = useState(false);
+
+  // Add logging to see post data
+  console.log('Rendering post:', post);
 
   const handleLike = () => {
     if (isLiked) {
@@ -49,14 +52,20 @@ export function Post({ post }: PostProps) {
               <span>{likes}</span>
             </button>
             <div className="flex gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600"
-                >
-                  #{tag}
+              {post.tags && post.tags.length > 0 ? (
+                post.tags.map((tag: string) => (
+                  <span
+                    key={tag}
+                    className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600"
+                  >
+                    #{tag}
+                  </span>
+                ))
+              ) : (
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">
+                  #general
                 </span>
-              ))}
+              )}
             </div>
           </div>
         </div>
