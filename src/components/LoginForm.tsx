@@ -7,25 +7,35 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 
 export function LoginForm() {
+  const [isRegistering, setIsRegistering] = useState(false);
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(username, password);
-      toast({
-        title: "Success",
-        description: "Welcome to Reedboss!",
-      });
+      if (isRegistering) {
+        await register(username, email, password);
+        toast({
+          title: "Success",
+          description: "Registration successful! Welcome to Reedboss!",
+        });
+      } else {
+        await login(username, password);
+        toast({
+          title: "Success",
+          description: "Welcome back to Reedboss!",
+        });
+      }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Invalid credentials. Please try again.",
+        description: isRegistering ? "Registration failed. Please try again." : "Invalid credentials. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -33,9 +43,18 @@ export function LoginForm() {
     }
   };
 
+  const toggleMode = () => {
+    setIsRegistering(!isRegistering);
+    setUsername('');
+    setEmail('');
+    setPassword('');
+  };
+
   return (
     <Card className="p-6 w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6">Welcome to Reedboss</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">
+        {isRegistering ? 'Create Account' : 'Welcome Back'}
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Input
@@ -46,6 +65,17 @@ export function LoginForm() {
             required
           />
         </div>
+        {isRegistering && (
+          <div>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+        )}
         <div>
           <Input
             type="password"
@@ -56,15 +86,15 @@ export function LoginForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? 'Processing...' : (isRegistering ? 'Register' : 'Login')}
         </Button>
-        <p className="text-sm text-center text-gray-500 mt-4">
-          Use these demo credentials to login:
-        </p>
-        <div className="text-sm text-center text-primary font-mono bg-gray-50 p-2 rounded">
-          <div>Username: <span className="font-bold">kminchelle</span></div>
-          <div>Password: <span className="font-bold">0lelplR</span></div>
-        </div>
+        <button
+          type="button"
+          onClick={toggleMode}
+          className="w-full text-sm text-primary hover:underline mt-4"
+        >
+          {isRegistering ? 'Already have an account? Login' : "Don't have an account? Register"}
+        </button>
       </form>
     </Card>
   );
