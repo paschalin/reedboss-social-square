@@ -31,26 +31,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      // Log the credentials being sent for debugging
-      console.log('Attempting login with:', { username, password });
+      console.log('🔍 Login Attempt:', { 
+        username: username.trim(), 
+        passwordLength: password.length 
+      });
       
-      // Using a known working credential pair for dummyjson.com
       const response = await fetch('https://dummyjson.com/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ 
-          username: 'kminchelle', // Using known working credentials
-          password: '0lelplR'     // Using known working credentials
+          username: username.trim(), 
+          password: password 
         }),
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Login API error:', errorData);
-        throw new Error(errorData.message || 'Login failed');
-      }
+      console.log('🌐 Response Status:', response.status);
       
       const data = await response.json();
+      
+      console.log('📦 Response Data:', data);
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
       
       if (data.token) {
         const userData = {
@@ -62,10 +68,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(userData);
         localStorage.setItem('reedboss_user', JSON.stringify(userData));
       } else {
-        throw new Error('Login failed');
+        throw new Error('No token received');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('🚨 Login Error:', error instanceof Error ? error.message : error);
       throw error;
     }
   };
