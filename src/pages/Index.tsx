@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReedbossSidebar } from '@/components/ReedbossSidebar';
 import { LoginForm } from '@/components/LoginForm';
@@ -16,10 +16,15 @@ const fetchPosts = async () => {
 
 const Index = () => {
   const { user, isLoading: authLoading } = useAuth();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const { data: posts, isLoading: postsLoading } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPosts,
   });
+
+  const openLoginDialog = () => {
+    dialogRef.current?.showModal();
+  };
 
   return (
     <SidebarProvider>
@@ -29,7 +34,7 @@ const Index = () => {
           {!user && (
             <div className="mb-6 p-4 bg-primary/5 rounded-lg">
               <p className="mb-2">Want to interact with posts? Sign in to your account!</p>
-              <Button onClick={() => document.getElementById('login-dialog')?.showModal()}>
+              <Button onClick={openLoginDialog}>
                 Sign In
               </Button>
             </div>
@@ -46,7 +51,7 @@ const Index = () => {
           )}
         </main>
       </div>
-      <dialog id="login-dialog" className="rounded-lg p-0">
+      <dialog ref={dialogRef} className="rounded-lg p-0">
         <LoginForm />
       </dialog>
     </SidebarProvider>
@@ -54,4 +59,3 @@ const Index = () => {
 };
 
 export default Index;
-
