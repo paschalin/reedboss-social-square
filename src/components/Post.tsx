@@ -9,13 +9,23 @@ interface PostProps {
     title: string;
     body: string;
     userId: number;
-    reactions: number;
+    reactions: number | { likes: number; dislikes: number };
     tags: string[];
   };
 }
 
 export function Post({ post }: PostProps) {
-  const [likes, setLikes] = useState(post.reactions || 0);
+  // Handle reactions whether it's a number or an object
+  const getInitialLikes = () => {
+    if (typeof post.reactions === 'number') {
+      return post.reactions;
+    } else if (post.reactions && typeof post.reactions === 'object') {
+      return post.reactions.likes || 0;
+    }
+    return 0;
+  };
+  
+  const [likes, setLikes] = useState(getInitialLikes());
   const [isLiked, setIsLiked] = useState(false);
 
   // Add logging to see post data
