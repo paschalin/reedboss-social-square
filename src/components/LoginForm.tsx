@@ -25,7 +25,7 @@ export function LoginForm() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Invalid credentials. Try: 'kminchelle' / '0lelplR'",
+        description: "Invalid credentials. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -59,8 +59,12 @@ export function LoginForm() {
           {isLoading ? 'Logging in...' : 'Login'}
         </Button>
         <p className="text-sm text-center text-gray-500 mt-4">
-          Demo credentials: kminchelle / 0lelplR
+          Use these demo credentials to login:
         </p>
+        <div className="text-sm text-center text-primary font-mono bg-gray-50 p-2 rounded">
+          <div>Username: <span className="font-bold">atuny0</span></div>
+          <div>Password: <span className="font-bold">9uQFF1Lh</span></div>
+        </div>
       </form>
     </Card>
   );

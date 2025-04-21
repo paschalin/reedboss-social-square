@@ -31,12 +31,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
+      // Log the credentials being sent for debugging
+      console.log('Attempting login with:', { username, password });
+      
       const response = await fetch('https://dummyjson.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ 
+          username: username.trim(), // Remove any whitespace
+          password 
+        }),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Login API error:', errorData);
+        throw new Error(errorData.message || 'Login failed');
+      }
+      
       const data = await response.json();
+      
       if (data.token) {
         const userData = {
           id: data.id,
