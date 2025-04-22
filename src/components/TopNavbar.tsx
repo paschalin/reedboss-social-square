@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/contexts/AuthContext"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ReedbossSidebar } from "./ReedbossSidebar"
 
 interface TopNavbarProps {
   onOpenSidebar: () => void;
   onOpenLoginDialog: () => void;
 }
 
-export function TopNavbar({ onOpenSidebar, onOpenLoginDialog }: TopNavbarProps) {
+export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
   const { user } = useAuth();
   const isMobile = useIsMobile();
 
@@ -19,9 +21,16 @@ export function TopNavbar({ onOpenSidebar, onOpenLoginDialog }: TopNavbarProps) 
       <div className="flex h-14 items-center px-4">
         <div className="flex">
           {isMobile && (
-            <Button variant="ghost" size="icon" onClick={onOpenSidebar} className="mr-2">
-              <Menu className="h-5 w-5" />
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="mr-2">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0">
+                <ReedbossSidebar />
+              </SheetContent>
+            </Sheet>
           )}
           <h1 className="text-xl font-semibold text-primary">Reedboss</h1>
         </div>

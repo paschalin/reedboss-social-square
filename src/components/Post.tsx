@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, MessageSquare, Share, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 interface PostProps {
@@ -61,6 +61,18 @@ export function Post({ post }: PostProps) {
               <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
               <span>{likes}</span>
             </button>
+            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
+              <MessageSquare className="w-4 h-4" />
+              <span>24</span>
+            </button>
+            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
+              <Share className="w-4 h-4" />
+              <span>12</span>
+            </button>
+            <div className="flex items-center gap-1 text-sm text-gray-500">
+              <Eye className="w-4 h-4" />
+              <span>1.2k</span>
+            </div>
             <div className="flex gap-2">
               {post.tags && post.tags.length > 0 ? (
                 post.tags.map((tag: string) => (
