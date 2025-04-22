@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         passwordLength: password.length 
       });
       
-      const response = await fetch('http://127.0.0.1:8000/api/login', {
+      const response = await fetch('http://127.0.0.1:8000/api/aut/login/', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (username: string, email: string, password: string) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/register', {
+      const response = await fetch('http://127.0.0.1:8000/api/auth/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

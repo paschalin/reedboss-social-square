@@ -44,7 +44,7 @@ export function Post({ post }: PostProps) {
     <Card className="p-4 mb-4">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
-          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+          <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
             {post.userId}
           </div>
         </div>
