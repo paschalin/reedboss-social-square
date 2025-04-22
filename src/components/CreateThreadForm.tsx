@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
       setTitle('');
       setContent('');
       setHashtags('');
-      setFiles('');
+      setFiles(null); // Fixed: Now using null instead of an empty string
     } catch (error) {
       console.error('Error creating thread:', error);
       toast({
