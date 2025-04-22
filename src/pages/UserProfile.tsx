@@ -10,6 +10,7 @@ import { ReedbossSidebar } from "@/components/ReedbossSidebar";
 import { RightSidebar } from "@/components/RightSidebar";
 import { TopNavbar } from "@/components/TopNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Chat } from "@/components/Chat";
 import React from "react";
 
 const fetchUserThreads = async (userId: string) => {
@@ -40,6 +41,11 @@ export default function UserProfile() {
   // Fake avatar URL for now
   const avatarUrl = `https://ui-avatars.com/api/?name=User+${userId}&background=random&size=128`;
 
+  // User chatting with their own profile? In practice, you'd use useAuth.
+  // For this example, hardcode a senderUserId.
+  const senderUserId = "1"; // Replace with useAuth().user?.id in real app
+  const chatPeerId = userId;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-background">
@@ -59,6 +65,10 @@ export default function UserProfile() {
                 <div className="text-muted-foreground text-sm">Joined recently</div>
               </div>
             </Card>
+            {/* Chat */}
+            <div className="flex justify-center mb-8">
+              <Chat userId={senderUserId} peerId={chatPeerId} />
+            </div>
             {/* Tabs */}
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList>
@@ -111,3 +121,4 @@ export default function UserProfile() {
     </SidebarProvider>
   );
 }
+
