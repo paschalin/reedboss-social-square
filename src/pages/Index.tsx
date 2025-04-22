@@ -1,12 +1,13 @@
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReedbossSidebar } from '@/components/ReedbossSidebar';
+import { RightSidebar } from '@/components/RightSidebar';
+import { TopNavbar } from '@/components/TopNavbar';
 import { LoginForm } from '@/components/LoginForm';
 import { Post } from '@/components/Post';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
 const fetchPosts = async () => {
@@ -54,39 +55,43 @@ const Index = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <ReedbossSidebar />
-        <main className="flex-1 max-w-2xl mx-auto p-4 md:p-6">
-          {!user && (
-            <div className="mb-6 p-4 bg-primary/5 rounded-lg">
-              <p className="mb-2">Want to interact with posts? Sign in to your account!</p>
-              <Button onClick={openLoginDialog}>
-                Sign In
-              </Button>
-            </div>
-          )}
-          <h2 className="text-xl font-semibold mb-6">Your Feed</h2>
-          
-          {error ? (
-            <div className="p-4 border border-red-300 bg-red-50 rounded-md">
-              <p className="text-red-600">Failed to load posts. Please try again later.</p>
-            </div>
-          ) : postsLoading ? (
-            <div className="p-4 border border-gray-200 rounded-md animate-pulse">
-              <p>Loading posts...</p>
-            </div>
-          ) : posts && posts.length > 0 ? (
-            <div className="space-y-4">
-              {posts.map((post: any) => (
-                <Post key={post.id} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 border border-gray-200 rounded-md">
-              <p>No posts found. Check back later!</p>
-            </div>
-          )}
-        </main>
+      <div className="min-h-screen flex w-full flex-col">
+        <TopNavbar onOpenSidebar={() => document.dispatchEvent(new CustomEvent('toggle-sidebar'))} onOpenLoginDialog={openLoginDialog} />
+        <div className="flex flex-1">
+          <ReedbossSidebar />
+          <main className="flex-1 max-w-2xl w-full mx-auto p-4 md:p-6">
+            {!user && (
+              <div className="mb-6 p-4 bg-primary/5 rounded-lg">
+                <p className="mb-2">Want to interact with posts? Sign in to your account!</p>
+                <Button onClick={openLoginDialog}>
+                  Sign In
+                </Button>
+              </div>
+            )}
+            <h2 className="text-xl font-semibold mb-6">Your Feed</h2>
+            
+            {error ? (
+              <div className="p-4 border border-red-300 bg-red-50 rounded-md">
+                <p className="text-red-600">Failed to load posts. Please try again later.</p>
+              </div>
+            ) : postsLoading ? (
+              <div className="p-4 border border-gray-200 rounded-md animate-pulse">
+                <p>Loading posts...</p>
+              </div>
+            ) : posts && posts.length > 0 ? (
+              <div className="space-y-4">
+                {posts.map((post: any) => (
+                  <Post key={post.id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 border border-gray-200 rounded-md">
+                <p>No posts found. Check back later!</p>
+              </div>
+            )}
+          </main>
+          <RightSidebar />
+        </div>
       </div>
       <dialog ref={dialogRef} className="rounded-lg p-0">
         <LoginForm />
