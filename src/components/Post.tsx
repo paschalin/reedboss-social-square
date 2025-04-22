@@ -4,13 +4,13 @@ import { Heart, MessageSquare, Share, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 // thread object is assumed to support these fields based on your backend
-interface PostProps {
-  post: {
+interface ThreadProps {
+  thread: {
     id: number | string;
     title: string;
     content?: string; // renamed from body, support both for compat
     body?: string;
-    userId?: number;
+    user?: number;
     reactions?: number | { likes: number; dislikes: number };
     views?: number;
     tags?: string[] | string;
@@ -20,10 +20,15 @@ interface PostProps {
     shares_count?: number;
     views_count?: number;
     hashtags?: string[] | string;
+    media?: Array<{
+      type: 'image' | 'video' | 'file';
+      url: string;
+      alt?: string;
+    }>;
   };
 }
 
-export function Post({ post }: PostProps) {
+export function Post({ thread: post }: ThreadProps) {
   // Prefer content over body
   const content = post.content || post.body || "";
 
@@ -86,7 +91,7 @@ export function Post({ post }: PostProps) {
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
           <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
-            {post.userId || "-"}
+            {post.user || "-"}
           </div>
         </div>
         <div className="flex-1">
@@ -109,8 +114,49 @@ export function Post({ post }: PostProps) {
                   </button>
                 )}
               </>
+
             )}
-          </div>
+ {/* Media rendering */}
+ {post.media && post.media.length > 0 && (
+            <div className="mb-3">
+              {post.media.map((mediaItem, index) => {
+                if (mediaItem.type === 'image') {
+                  return (
+                    <img
+                      key={index}
+                      src={mediaItem.url}
+                      alt={mediaItem.alt || 'Media'}
+                      className="w-full h-auto rounded-md mb-2"
+                    />
+                  );
+                } else if (mediaItem.type === 'video') {
+                  return (
+                    <video
+                      key={index}
+                      controls
+                      className="w-full h-auto rounded-md mb-2"
+                    >
+                      <source src={mediaItem.url} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  );
+                } else if (mediaItem.type === 'file') {
+                  return (
+                    <a
+                      key={index}
+                      href={mediaItem.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline block mb-2"
+                    >
+                      {mediaItem.alt || 'Download File'}
+                    </a>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          )}          </div>
           <div className="flex items-center gap-4 mb-2">
             <button
               onClick={toggleLike}

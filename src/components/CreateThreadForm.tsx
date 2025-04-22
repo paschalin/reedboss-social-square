@@ -41,7 +41,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
           const formData = new FormData();
           formData.append('file', file);
 
-          const mediaRes = await fetch('http://127.0.0.1:8000/api/media/upload/', {
+          const mediaRes = await fetch('http://127.0.0.1:8000/api/media/upload', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${user.token}`,
@@ -99,7 +99,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
       setTitle('');
       setContent('');
       setHashtags('');
-      setFiles(null);
+      setFiles('');
     } catch (error) {
       console.error('Error creating thread:', error);
       toast({

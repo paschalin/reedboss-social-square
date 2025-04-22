@@ -81,7 +81,7 @@ const Index = () => {
             ) : threads && threads.length > 0 ? (
               <div className="space-y-4">
                 {threads.map((thread: any) => (
-                  <Post key={thread.id} post={thread} />
+                  <Post key={thread.id} thread={thread} />
                 ))}
               </div>
             ) : (
