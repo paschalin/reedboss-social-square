@@ -6,6 +6,7 @@ import { RightSidebar } from '@/components/RightSidebar';
 import { TopNavbar } from '@/components/TopNavbar';
 import { LoginForm } from '@/components/LoginForm';
 import { Post } from '@/components/Post';
+import { Button } from '@/components/ui/button';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
