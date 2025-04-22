@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { Heart, MessageSquare, Share, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { Link } from "react-router-dom";
 
-// thread object is assumed to support these fields based on your backend
 interface ThreadProps {
   thread: {
     id: number | string;
@@ -29,10 +28,8 @@ interface ThreadProps {
 }
 
 export function Post({ thread: post }: ThreadProps) {
-  // Prefer content over body
   const content = post.content || post.body || "";
 
-  // Handle hashtags/tags as array or csv
   const getTags = () => {
     if (Array.isArray(post.hashtags) && post.hashtags.length > 0) {
       return post.hashtags;
@@ -48,7 +45,6 @@ export function Post({ thread: post }: ThreadProps) {
   };
   const tags = getTags();
 
-  // Prefer post.likes or reactions.likes
   const getInitialLikes = () => {
     if (typeof post.likes === "number") return post.likes;
     if (post.reactions && typeof post.reactions === "object")
@@ -69,14 +65,14 @@ export function Post({ thread: post }: ThreadProps) {
     setIsLiked((v) => !v);
   };
 
-  // Use slug, fallback to id, for thread link
   const threadSlug = post.slug
     ? post.slug
     : post.title
       ? post.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
       : String(post.id);
 
-  const threadUrl = `http://localhost:8080/t/${threadSlug}`;
+  const threadUrl = `/t/${threadSlug}`;
+  const userUrl = post.user ? `/u/${post.user}` : "#";
   const commentsCount = (typeof post.comments_count === "number") ? post.comments_count : 0;
   const sharesCount = (typeof post.shares_count === "number") ? post.shares_count : 0;
   const viewsCount =
@@ -90,14 +86,15 @@ export function Post({ thread: post }: ThreadProps) {
     <Card className="p-4 mb-4">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0">
-          <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
+          <Link to={userUrl} className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center hover:underline">
             {post.user || "-"}
-          </div>
+          </Link>
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold mb-1">{post.title}</h3>
+          <Link to={threadUrl}>
+            <h3 className="font-semibold mb-1 hover:underline">{post.title}</h3>
+          </Link>
           <div className="text-gray-600 mb-3">
-            {/* Readmore logic */}
             {content.length > READ_MORE_LIMIT && !expanded ? (
               <>
                 {content.slice(0, READ_MORE_LIMIT) + "... "}
@@ -116,47 +113,47 @@ export function Post({ thread: post }: ThreadProps) {
               </>
 
             )}
- {/* Media rendering */}
- {post.media && post.media.length > 0 && (
-            <div className="mb-3">
-              {post.media.map((mediaItem, index) => {
-                if (mediaItem.type === 'image') {
-                  return (
-                    <img
-                      key={index}
-                      src={mediaItem.url}
-                      alt={mediaItem.alt || 'Media'}
-                      className="w-full h-auto rounded-md mb-2"
-                    />
-                  );
-                } else if (mediaItem.type === 'video') {
-                  return (
-                    <video
-                      key={index}
-                      controls
-                      className="w-full h-auto rounded-md mb-2"
-                    >
-                      <source src={mediaItem.url} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  );
-                } else if (mediaItem.type === 'file') {
-                  return (
-                    <a
-                      key={index}
-                      href={mediaItem.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline block mb-2"
-                    >
-                      {mediaItem.alt || 'Download File'}
-                    </a>
-                  );
-                }
-                return null;
-              })}
-            </div>
-          )}          </div>
+            {post.media && post.media.length > 0 && (
+              <div className="mb-3">
+                {post.media.map((mediaItem, index) => {
+                  if (mediaItem.type === 'image') {
+                    return (
+                      <img
+                        key={index}
+                        src={mediaItem.url}
+                        alt={mediaItem.alt || 'Media'}
+                        className="w-full h-auto rounded-md mb-2"
+                      />
+                    );
+                  } else if (mediaItem.type === 'video') {
+                    return (
+                      <video
+                        key={index}
+                        controls
+                        className="w-full h-auto rounded-md mb-2"
+                      >
+                        <source src={mediaItem.url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    );
+                  } else if (mediaItem.type === 'file') {
+                    return (
+                      <a
+                        key={index}
+                        href={mediaItem.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline block mb-2"
+                      >
+                        {mediaItem.alt || 'Download File'}
+                      </a>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-4 mb-2">
             <button
               onClick={toggleLike}
@@ -179,14 +176,12 @@ export function Post({ thread: post }: ThreadProps) {
               <Eye className="w-4 h-4" />
               <span>{viewsCount}</span>
             </div>
-            <a
-              href={threadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to={threadUrl}
               className="ml-2 text-sm text-blue-600 hover:underline"
             >
               View Thread
-            </a>
+            </Link>
           </div>
           <div className="flex gap-2">
             {tags.length > 0
