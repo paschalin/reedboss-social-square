@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ReedbossSidebar } from "./ReedbossSidebar"
+import { CreateThreadForm } from "./CreateThreadForm"
+import { useState } from "react"
 
 interface TopNavbarProps {
   onOpenSidebar: () => void;
@@ -15,6 +17,7 @@ interface TopNavbarProps {
 export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const [isCreateThreadOpen, setIsCreateThreadOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -53,7 +56,7 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
             )}
             
             {user ? (
-              <Button size="icon">
+              <Button size="icon" onClick={() => setIsCreateThreadOpen(true)}>
                 <CirclePlus className="h-5 w-5" />
               </Button>
             ) : (
@@ -64,6 +67,10 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
           </div>
         </div>
       </div>
+      <CreateThreadForm 
+        isOpen={isCreateThreadOpen} 
+        onClose={() => setIsCreateThreadOpen(false)} 
+      />
     </nav>
   );
 }
