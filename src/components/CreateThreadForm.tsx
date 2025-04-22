@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -32,36 +31,70 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
       return;
     }
 
-    try {
-      setIsSubmitting(true);
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('content', content);
-      formData.append('hashtags', hashtags);
-      
-      if (files && files.length > 0) {
-        Array.from(files).forEach((file) => {
-          formData.append('files', file);
+    setIsSubmitting(true);
+    const mediaIds: string[] = [];
+
+    // Step 1: Upload media files
+    if (files && files.length > 0) {
+      try {
+        for (const file of Array.from(files)) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const mediaRes = await fetch('http://127.0.0.1:8000/api/media/upload/', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+            },
+            body: formData,
+          });
+
+          const mediaData = await mediaRes.json();
+          if (!mediaRes.ok) {
+            throw new Error(mediaData.detail || 'Failed to upload media');
+          }
+          mediaIds.push(mediaData.media_id);
+        }
+      } catch (error) {
+        console.error('Media upload error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to upload media. Please try again.",
+          variant: "destructive"
         });
+        setIsSubmitting(false);
+        return;
       }
+    }
+
+    // Step 2: Create thread with media_ids
+    try {
+      const payload = {
+        title,
+        content,
+        hashtags,
+        media_ids: mediaIds,
+      };
 
       const response = await fetch('http://127.0.0.1:8000/api/threads/create/', {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`,
         },
-        body: formData,
+        body: JSON.stringify(payload),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error('Failed to create thread');
+        throw new Error(data.detail || 'Failed to create thread');
       }
 
       toast({
         title: "Success",
         description: "Your thread has been created",
       });
-      
+
       onClose();
       setTitle('');
       setContent('');

@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from '@/contexts/AuthContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ export function LoginForm() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isOpen, setIsOpen] = useState(true); // State to control dialog visibility
   const [isLoading, setIsLoading] = useState(false);
   const { login, register } = useAuth();
   const { toast } = useToast();
@@ -32,6 +34,8 @@ export function LoginForm() {
           description: "Welcome back to Reedboss!",
         });
       }
+      setIsOpen(false); // Close the dialog on success
+
     } catch (error) {
       toast({
         title: "Error",
@@ -50,7 +54,16 @@ export function LoginForm() {
     setPassword('');
   };
 
+  const onClose = () => {
+    setIsOpen(false); // Close the dialog
+  };
+
   return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+         <DialogHeader>
+          <DialogTitle>{isRegistering ? 'Create Account' : 'Welcome Back'}</DialogTitle>
+        </DialogHeader>
     <Card className="p-6 w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-center mb-6">
         {isRegistering ? 'Create Account' : 'Welcome Back'}
@@ -97,5 +110,7 @@ export function LoginForm() {
         </button>
       </form>
     </Card>
+    </DialogContent>
+    </Dialog>
   );
 }
