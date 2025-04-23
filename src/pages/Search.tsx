@@ -1,15 +1,24 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { UserSearch } from "@/components/UserSearch";
 import { ThreadSearch } from "@/components/ThreadSearch";
 import { TopicSearch } from "@/components/TopicSearch";
+import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("users");
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const queryParam = searchParams.get('q');
+    if (queryParam) {
+      setSearchQuery(queryParam);
+    }
+  }, [searchParams]);
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">

@@ -1,3 +1,4 @@
+
 import { Search, Menu, CirclePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
@@ -8,6 +9,8 @@ import { CreateThreadForm } from "./CreateThreadForm"
 import { ThemeToggle } from "./ThemeToggle"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Input } from "./ui/input"
+import { Form } from "./ui/form"
 
 interface TopNavbarProps {
   onOpenLoginDialog: () => void;
@@ -18,6 +21,15 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [isCreateThreadOpen, setIsCreateThreadOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+      setSearchValue("");
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -39,20 +51,25 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
         </div>
 
         <div className="flex items-center flex-1 gap-4 justify-end md:justify-between">
-          <div className="hidden md:flex relative max-w-sm flex-1 mx-8">
-            <Button
-              variant="ghost"
-              className="w-full justify-start pl-8"
-              onClick={() => navigate('/search')}
-            >
-              <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
-              Search...
-            </Button>
-          </div>
+          <form onSubmit={handleSearch} className="hidden md:flex relative max-w-sm flex-1 mx-8">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="pl-8"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </form>
 
           <div className="flex items-center gap-2">
             {!isMobile && (
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="md:hidden"
+                onClick={() => navigate('/search')}
+              >
                 <Search className="h-5 w-5" />
               </Button>
             )}
