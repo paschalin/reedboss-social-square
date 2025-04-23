@@ -12,7 +12,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import { CommentForm } from "@/components/CommentForm";
 
 const fetchUserThreads = async (userId: string) => {
   const response = await fetch("http://127.0.0.1:8000/api/threads");
@@ -40,9 +39,6 @@ export default function UserProfile() {
 
   const avatarUrl = `https://ui-avatars.com/api/?name=User+${userId}&background=random&size=128`;
 
-  const senderUserId = "1";
-  const chatPeerId = userId;
-
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-background">
@@ -63,8 +59,9 @@ export default function UserProfile() {
                   </div>
                 </div>
                 <Link to={`/chat/${userId}`}>
-                  <Button variant="outline" size="icon">
-                    <MessageCircle className="h-5 w-5" />
+                  <Button variant="outline">
+                    <MessageCircle className="h-5 w-5 mr-2" />
+                    Message
                   </Button>
                 </Link>
               </div>

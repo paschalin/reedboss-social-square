@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
@@ -9,6 +9,8 @@ import { ReedbossSidebar } from "@/components/ReedbossSidebar";
 import { RightSidebar } from "@/components/RightSidebar";
 import { TopNavbar } from "@/components/TopNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { CommentForm } from "@/components/CommentForm";
 import React from "react";
 
 const fetchThread = async (slug: string | undefined) => {
@@ -31,10 +33,15 @@ export default function ThreadView() {
     queryFn: () => fetchThread(slug),
     enabled: !!slug,
   });
+  const [showCommentForm, setShowCommentForm] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
+
+  const toggleCommentForm = () => {
+    setShowCommentForm(!showCommentForm);
+  };
 
   // Layout
   return (
@@ -76,10 +83,15 @@ export default function ThreadView() {
                     )}
                   </div>
                   <div className="flex items-center gap-5 mt-4 text-gray-600">
-                    <div className="flex gap-1 items-center">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={toggleCommentForm}
+                      className="flex items-center gap-2 text-gray-600"
+                    >
                       <MessageSquare className="w-4 h-4" />
                       <span>{post.comments_count ?? 0}</span>
-                    </div>
+                    </Button>
                     <div className="flex gap-1 items-center">
                       <Share className="w-4 h-4" />
                       <span>{post.shares_count ?? 0}</span>
@@ -90,6 +102,12 @@ export default function ThreadView() {
                     </div>
                   </div>
                 </Card>
+                
+                {showCommentForm && (
+                  <div className="mt-4">
+                    <CommentForm threadId={slug || ""} onCommentSubmit={() => {}} />
+                  </div>
+                )}
               </div>
             ) : null}
           </main>
