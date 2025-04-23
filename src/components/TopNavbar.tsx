@@ -1,16 +1,15 @@
 import { Search, Menu, CirclePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useAuth } from "@/contexts/AuthContext"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ReedbossSidebar } from "./ReedbossSidebar"
 import { CreateThreadForm } from "./CreateThreadForm"
+import { ThemeToggle } from "./ThemeToggle"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 interface TopNavbarProps {
-  onOpenSidebar: () => void;
   onOpenLoginDialog: () => void;
 }
 
@@ -57,6 +56,8 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
                 <Search className="h-5 w-5" />
               </Button>
             )}
+            
+            <ThemeToggle />
             
             {user ? (
               <Button size="icon" onClick={() => setIsCreateThreadOpen(true)}>
