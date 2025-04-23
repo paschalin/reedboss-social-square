@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { Heart, MessageSquare, Share, Eye } from 'lucide-react';
+import { Heart, MessageSquare, Share, Copy, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 interface ThreadProps {
   thread: {
@@ -81,6 +88,39 @@ export function Post({ thread: post }: ThreadProps) {
       : typeof post.views === "number"
         ? post.views
         : 0;
+
+  const { toast } = useToast();
+  const shareUrl = `${window.location.origin}/t/${threadSlug}`;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link copied",
+        description: "Thread link copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Please try again",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const shareToSocial = (platform: string) => {
+    const title = encodeURIComponent(post.title);
+    const url = encodeURIComponent(shareUrl);
+    
+    const links = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?text=${title}&url=${url}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      instagram: `https://www.instagram.com/` // Instagram doesn't support direct sharing
+    };
+
+    window.open(links[platform as keyof typeof links], '_blank');
+  };
 
   return (
     <Card className="p-4 mb-4">
@@ -168,10 +208,35 @@ export function Post({ thread: post }: ThreadProps) {
               <MessageSquare className="w-4 h-4" />
               <span>{commentsCount}</span>
             </div>
-            <div className="flex items-center gap-1 text-sm text-gray-500">
-              <Share className="w-4 h-4" />
-              <span>{sharesCount}</span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                  <Share className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={handleCopyLink}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy link
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => shareToSocial('facebook')}>
+                  <Facebook className="mr-2 h-4 w-4" />
+                  Share to Facebook
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => shareToSocial('twitter')}>
+                  <Twitter className="mr-2 h-4 w-4" />
+                  Share to Twitter
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => shareToSocial('linkedin')}>
+                  <Linkedin className="mr-2 h-4 w-4" />
+                  Share to LinkedIn
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => shareToSocial('instagram')}>
+                  <Instagram className="mr-2 h-4 w-4" />
+                  Share to Instagram
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <div className="flex items-center gap-1 text-sm text-gray-500">
               <Eye className="w-4 h-4" />
               <span>{viewsCount}</span>

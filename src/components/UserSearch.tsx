@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
   id: string;
@@ -17,16 +17,29 @@ export function UserSearch() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // In a real app, fetch from your API
-        const response = await fetch("http://127.0.0.1:8000/api/auth/users/");
+        const response = await fetch("http://127.0.0.1:8000/api/auth/users/", {
+          headers: {
+            'Authorization': 'Bearer your-token-here' // In a real app, get from auth context
+          }
+        });
+        
+        if (response.status === 401) {
+          toast({
+            title: "Authentication required",
+            description: "Please log in to view users",
+            variant: "destructive"
+          });
+          return;
+        }
+        
         if (!response.ok) throw new Error("Failed to fetch users");
         const data = await response.json();
         
-        // Transform data to our User interface
         const formattedUsers: User[] = Array.isArray(data) 
           ? data.map((user: any) => ({
               id: user.id || String(user.id),
@@ -38,6 +51,11 @@ export function UserSearch() {
         setFilteredUsers(formattedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load users. Using demo data.",
+          variant: "destructive"
+        });
         // Fallback to mock data
         const mockUsers = [
           { id: "1", name: "User 1" },
@@ -54,7 +72,7 @@ export function UserSearch() {
     };
 
     fetchUsers();
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     const filtered = users.filter(user =>
