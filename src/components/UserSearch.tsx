@@ -11,7 +11,11 @@ interface User {
   name: string;
 }
 
-export function UserSearch() {
+interface UserSearchProps {
+  searchQuery?: string;
+}
+
+export function UserSearch({ searchQuery = "" }: UserSearchProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
@@ -76,10 +80,10 @@ export function UserSearch() {
 
   useEffect(() => {
     const filtered = users.filter(user =>
-      user.name.toLowerCase().includes(search.toLowerCase())
+      user.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredUsers(filtered);
-  }, [search, users]);
+  }, [searchQuery, users]);
 
   const startChat = (userId: string) => {
     navigate(`/chat/${userId}`);

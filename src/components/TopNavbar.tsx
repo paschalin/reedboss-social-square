@@ -1,4 +1,3 @@
-
 import { Search, Menu, CirclePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ReedbossSidebar } from "./ReedbossSidebar"
 import { CreateThreadForm } from "./CreateThreadForm"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 interface TopNavbarProps {
   onOpenSidebar: () => void;
@@ -17,6 +17,7 @@ interface TopNavbarProps {
 export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [isCreateThreadOpen, setIsCreateThreadOpen] = useState(false);
 
   return (
@@ -40,12 +41,14 @@ export function TopNavbar({ onOpenLoginDialog }: TopNavbarProps) {
 
         <div className="flex items-center flex-1 gap-4 justify-end md:justify-between">
           <div className="hidden md:flex relative max-w-sm flex-1 mx-8">
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="pl-8"
-            />
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Button
+              variant="ghost"
+              className="w-full justify-start pl-8"
+              onClick={() => navigate('/search')}
+            >
+              <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
+              Search...
+            </Button>
           </div>
 
           <div className="flex items-center gap-2">
