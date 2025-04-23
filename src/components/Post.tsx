@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, MessageSquare, Share, Copy, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Heart, MessageSquare, Share, Copy, Eye, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Link } from "react-router-dom";
 import {
