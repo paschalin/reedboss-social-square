@@ -19,7 +19,7 @@ export default function ChatPage() {
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-background">
-        <TopNavbar onOpenSidebar={() => {}} onOpenLoginDialog={() => {}} />
+        <TopNavbar onOpenLoginDialog={() => {}} />
         <div className="flex w-full mx-auto max-w-7xl">
           <ReedbossSidebar />
           <main className="flex-1 min-w-0 p-4">

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -43,11 +42,10 @@ export default function ThreadView() {
     setShowCommentForm(!showCommentForm);
   };
 
-  // Layout
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-background">
-        <TopNavbar onOpenSidebar={() => {}} onOpenLoginDialog={() => {}} />
+        <TopNavbar onOpenLoginDialog={() => {}} />
         <div className="flex w-full mx-auto max-w-7xl">
           <ReedbossSidebar />
           <main className="flex-1 min-w-0">

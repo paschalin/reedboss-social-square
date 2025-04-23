@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReedbossSidebar } from '@/components/ReedbossSidebar';
@@ -11,7 +10,6 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
 
-// Updated fetchThreads to match your API
 const fetchThreads = async () => {
   try {
     console.log('Fetching threads...');
@@ -20,8 +18,6 @@ const fetchThreads = async () => {
       throw new Error(`Failed to fetch threads: ${response.status}`);
     }
     const data = await response.json();
-    // Expecting data.results or data.threads depending on your API structure.
-    // We'll support both for flexibility.
     console.log('Threads received:', data);
     return data.results || data.threads || data;
   } catch (error) {
@@ -61,7 +57,7 @@ const Index = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full flex-col">
-        <TopNavbar onOpenSidebar={() => document.dispatchEvent(new CustomEvent('toggle-sidebar'))} onOpenLoginDialog={openLoginDialog} />
+        <TopNavbar onOpenLoginDialog={openLoginDialog} />
         <div className="flex flex-1">
           <ReedbossSidebar />
           <main className="flex-1 max-w-2xl w-full mx-auto p-4 md:p-6">
