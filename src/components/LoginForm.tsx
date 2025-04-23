@@ -6,27 +6,20 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { useEffect } from 'react';
 
-export function LoginForm() {
+interface LoginFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function LoginForm({ isOpen, onClose }: LoginFormProps) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isOpen, setIsOpen] = useState(false); // Default to false
   const [isLoading, setIsLoading] = useState(false);
-  const { login, register, user } = useAuth(); // Access the user object from AuthContext
+  const { login, register, user } = useAuth();
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Check if the user is already logged in
-    if (!user) {
-      const storedUser = localStorage.getItem('reedboss_user');
-      if (!storedUser) {
-        setIsOpen(true); // Open dialog if no user is found
-      }
-    }
-  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +38,7 @@ export function LoginForm() {
           description: "Welcome back to Reedboss!",
         });
       }
-      setIsOpen(false); // Close the dialog on success
+      onClose(); // Close the dialog on success
     } catch (error) {
       toast({
         title: "Error",
@@ -62,10 +55,6 @@ export function LoginForm() {
     setUsername('');
     setEmail('');
     setPassword('');
-  };
-
-  const onClose = () => {
-    setIsOpen(false); // Close the dialog
   };
 
   return (

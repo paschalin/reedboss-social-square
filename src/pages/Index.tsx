@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReedbossSidebar } from '@/components/ReedbossSidebar';
 import { RightSidebar } from '@/components/RightSidebar';
@@ -37,7 +37,7 @@ const fetchThreads = async () => {
 
 const Index = () => {
   const { user, isLoading: authLoading } = useAuth();
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { data: threads, isLoading: threadsLoading, error } = useQuery({
     queryKey: ['threads'],
     queryFn: fetchThreads,
@@ -51,7 +51,11 @@ const Index = () => {
   }, []);
 
   const openLoginDialog = () => {
-    dialogRef.current?.showModal();
+    setIsLoginOpen(true);
+  };
+
+  const closeLoginDialog = () => {
+    setIsLoginOpen(false);
   };
 
   return (
@@ -93,9 +97,7 @@ const Index = () => {
           <RightSidebar />
         </div>
       </div>
-      <dialog ref={dialogRef} className="rounded-lg p-0">
-        <LoginForm />
-      </dialog>
+      <LoginForm isOpen={isLoginOpen} onClose={closeLoginDialog} />
     </SidebarProvider>
   );
 };
