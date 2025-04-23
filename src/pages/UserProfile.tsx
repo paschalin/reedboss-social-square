@@ -1,5 +1,4 @@
-
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -10,14 +9,15 @@ import { ReedbossSidebar } from "@/components/ReedbossSidebar";
 import { RightSidebar } from "@/components/RightSidebar";
 import { TopNavbar } from "@/components/TopNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Chat } from "@/components/Chat";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import React from "react";
+import { CommentForm } from "@/components/CommentForm";
 
 const fetchUserThreads = async (userId: string) => {
   const response = await fetch("http://127.0.0.1:8000/api/threads");
   if (!response.ok) throw new Error("Failed to fetch threads");
   const threads = await response.json();
-  // userId might be numeric or string
   return threads.filter((t: any) => String(t.user) === userId);
 };
 
@@ -38,12 +38,9 @@ export default function UserProfile() {
     enabled: !!userId,
   });
 
-  // Fake avatar URL for now
   const avatarUrl = `https://ui-avatars.com/api/?name=User+${userId}&background=random&size=128`;
 
-  // User chatting with their own profile? In practice, you'd use useAuth.
-  // For this example, hardcode a senderUserId.
-  const senderUserId = "1"; // Replace with useAuth().user?.id in real app
+  const senderUserId = "1";
   const chatPeerId = userId;
 
   return (
@@ -53,23 +50,25 @@ export default function UserProfile() {
         <div className="flex w-full mx-auto max-w-7xl">
           <ReedbossSidebar />
           <main className="flex-1 min-w-0">
-            {/* Cover */}
             <div className="w-full h-40 rounded-b-xl mb-6" style={{background: `url(${getCover(userId)}) center/cover`}} />
-            {/* Profile */}
-            <Card className="relative -mt-16 mb-6 p-6 flex items-center gap-4">
-              <Avatar>
-                <img src={avatarUrl} alt={`User ${userId}`} className="w-20 h-20 rounded-full border-2 border-white" />
-              </Avatar>
-              <div>
-                <div className="font-bold text-xl">User {userId}</div>
-                <div className="text-muted-foreground text-sm">Joined recently</div>
+            <Card className="relative -mt-16 mb-6 p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Avatar>
+                    <img src={avatarUrl} alt={`User ${userId}`} className="w-20 h-20 rounded-full border-2 border-white" />
+                  </Avatar>
+                  <div>
+                    <div className="font-bold text-xl">User {userId}</div>
+                    <div className="text-muted-foreground text-sm">Joined recently</div>
+                  </div>
+                </div>
+                <Link to={`/chat/${userId}`}>
+                  <Button variant="outline" size="icon">
+                    <MessageCircle className="h-5 w-5" />
+                  </Button>
+                </Link>
               </div>
             </Card>
-            {/* Chat */}
-            <div className="flex justify-center mb-8">
-              <Chat userId={senderUserId} peerId={chatPeerId} />
-            </div>
-            {/* Tabs */}
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
@@ -121,4 +120,3 @@ export default function UserProfile() {
     </SidebarProvider>
   );
 }
-

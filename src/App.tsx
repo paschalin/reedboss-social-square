@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ThreadView from "./pages/ThreadView";
 import UserProfile from "./pages/UserProfile";
+import ChatPage from "./pages/Chat";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/t/:slug" element={<ThreadView />} />
             <Route path="/u/:userId" element={<UserProfile />} />
+            <Route path="/chat/:peerId" element={<ChatPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
