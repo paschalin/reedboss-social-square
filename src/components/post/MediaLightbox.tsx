@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { type CarouselApi } from '@/components/ui/carousel';
 
 interface Media {
   id?: number | string;
@@ -21,11 +22,22 @@ interface MediaLightboxProps {
 
 export function MediaLightbox({ isOpen, onClose, media, initialIndex = 0 }: MediaLightboxProps) {
   const mediaArray = Array.isArray(media) ? media : [media];
+  const [api, setApi] = useState<CarouselApi>();
+  
+  // Set initial index when the carousel API is available
+  useEffect(() => {
+    if (!api) return;
+    
+    // Only set the initial index when the lightbox is opened
+    if (isOpen) {
+      api.scrollTo(initialIndex);
+    }
+  }, [api, initialIndex, isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl p-0 bg-background/95 backdrop-blur">
-        <Carousel className="w-full" defaultIndex={initialIndex}>
+        <Carousel className="w-full" setApi={setApi}>
           <CarouselContent>
             {mediaArray.map((item, index) => {
               const url = item.url || item.file || '';

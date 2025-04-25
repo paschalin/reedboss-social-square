@@ -1,7 +1,6 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface MediaPreviewProps {
   files: FileList | null;
@@ -22,9 +21,10 @@ export function MediaPreview({ files }: MediaPreviewProps) {
     };
   }, []);
 
-  useCallback(() => {
+  useEffect(() => {
     if (files) {
-      return generatePreviews(files);
+      const cleanup = generatePreviews(files);
+      return cleanup;
     }
   }, [files, generatePreviews]);
 
