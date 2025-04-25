@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
     }
 
     setIsSubmitting(true);
+    let mediaId = null;
     const mediaIds: string[] = [];
 
     // Step 1: Upload media files
@@ -56,6 +56,8 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
           }
           mediaIds.push(mediaData.media_id);
         }
+        mediaId = mediaIds[0]; // Only use the first uploaded media_id
+
       } catch (error) {
         console.error('Media upload error:', error);
         toast({
@@ -74,7 +76,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
         title,
         content,
         hashtags,
-        media_ids: mediaIds,
+        media_id: mediaId,
       };
 
       const response = await fetch('http://127.0.0.1:8000/api/threads/create/', {
@@ -100,7 +102,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
       setTitle('');
       setContent('');
       setHashtags('');
-      setFiles(null); // Fixed: Now using null instead of an empty string
+      setFiles(null);
     } catch (error) {
       console.error('Error creating thread:', error);
       toast({

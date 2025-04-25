@@ -64,9 +64,7 @@ export function LoginForm({ isOpen, onClose }: LoginFormProps) {
           <DialogTitle>{isRegistering ? 'Create Account' : 'Welcome Back'}</DialogTitle>
         </DialogHeader>
         <Card className="p-6 w-full max-w-md mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-6">
-            {isRegistering ? 'Create Account' : 'Welcome Back'}
-          </h2>
+          
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Input

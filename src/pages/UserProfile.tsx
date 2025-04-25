@@ -11,6 +11,8 @@ import { TopNavbar } from "@/components/TopNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LoginForm } from '@/components/LoginForm';
+import { useAuth } from '@/contexts/AuthContext';
 import React from "react";
 
 const fetchUserThreads = async (userId: string) => {

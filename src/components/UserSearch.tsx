@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+
 
 interface User {
   id: string;
@@ -21,6 +23,7 @@ export function UserSearch({ searchQuery = "" }: UserSearchProps) {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -28,7 +31,7 @@ export function UserSearch({ searchQuery = "" }: UserSearchProps) {
       try {
         const response = await fetch("http://127.0.0.1:8000/api/auth/users/", {
           headers: {
-            'Authorization': 'Bearer your-token-here' // In a real app, get from auth context
+            'Authorization': `Bearer ${user.token}`,
           }
         });
         
@@ -45,11 +48,11 @@ export function UserSearch({ searchQuery = "" }: UserSearchProps) {
         const data = await response.json();
         
         const formattedUsers: User[] = Array.isArray(data) 
-          ? data.map((user: any) => ({
-              id: user.id || String(user.id),
-              name: user.name || user.username || `User ${user.id || '?'}`
-            }))
-          : [];
+      ? data.map((user: { id: string | number; name?: string; username?: string }) => ({
+          id: String(user.id), // Convert `id` to a string
+          name: user.name || user.username || `User ${user.id || '?'}` // Fallback to username or default
+        }))
+      : [];
         
         setUsers(formattedUsers);
         setFilteredUsers(formattedUsers);
