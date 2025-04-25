@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Heart, MessageSquare, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -28,7 +27,13 @@ interface ThreadProps {
       type: 'image' | 'video' | 'file';
       url: string;
       alt?: string;
-    }>;
+    }> | {
+      id: number | string;
+      file: string;
+      content_type?: string;
+      media_id?: string;
+      uploaded_at?: string;
+    };
   };
 }
 

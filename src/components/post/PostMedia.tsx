@@ -1,56 +1,60 @@
 
-interface MediaItem {
-  type: 'image' | 'video' | 'file';
-  url: string;
+interface Media {
+  id?: number | string;
+  type?: 'image' | 'video' | 'file';
+  url?: string;
   alt?: string;
+  file?: string;
+  content_type?: string;
+  media_id?: string;
+  uploaded_at?: string;
 }
 
 interface PostMediaProps {
-  media: MediaItem[];
+  media?: Media[] | Media | null;
 }
 
 export function PostMedia({ media }: PostMediaProps) {
-  if (!media || media.length === 0) return null;
-
+  if (!media) return null;
+  
+  // Convert single media object to array for consistent processing
+  const mediaArray = Array.isArray(media) ? media : [media];
+  
   return (
-    <div className="mb-3">
-      {media.map((mediaItem, index) => {
-        if (mediaItem.type === 'image') {
+    <div className="my-3 space-y-2">
+      {mediaArray.map((item, index) => {
+        // Extract URL from either media format
+        const url = item.url || item.file || '';
+        const alt = item.alt || 'Media content';
+        
+        if (!url) return null;
+        
+        // Determine content type (defaulting to image)
+        const type = item.type || (item.content_type && item.content_type.startsWith('video') 
+          ? 'video' 
+          : 'image');
+        
+        if (type === 'video') {
           return (
+            <div key={`media-${index}`} className="relative rounded-lg overflow-hidden">
+              <video 
+                src={url}
+                controls
+                className="w-full max-h-[400px] object-contain"
+              />
+            </div>
+          );
+        }
+        
+        return (
+          <div key={`media-${index}`} className="relative rounded-lg overflow-hidden">
             <img
-              key={index}
-              src={mediaItem.url}
-              alt={mediaItem.alt || 'Media'}
-              className="w-full h-auto rounded-md mb-2"
+              src={url}
+              alt={alt}
+              className="w-full max-h-[400px] object-contain"
             />
-          );
-        }
-        if (mediaItem.type === 'video') {
-          return (
-            <video
-              key={index}
-              controls
-              className="w-full h-auto rounded-md mb-2"
-            >
-              <source src={mediaItem.url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          );
-        }
-        if (mediaItem.type === 'file') {
-          return (
-            <a
-              key={index}
-              href={mediaItem.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline block mb-2"
-            >
-              {mediaItem.alt || 'Download File'}
-            </a>
-          );
-        }
-        return null;
+          </div>
+        );
       })}
     </div>
   );
