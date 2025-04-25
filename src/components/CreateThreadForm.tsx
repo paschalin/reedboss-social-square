@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { MediaPreview } from './post/MediaPreview';
 
 interface CreateThreadFormProps {
   isOpen: boolean;
@@ -154,6 +155,7 @@ export function CreateThreadForm({ isOpen, onClose }: CreateThreadFormProps) {
               multiple
               className="cursor-pointer"
             />
+            <MediaPreview files={files} />
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
