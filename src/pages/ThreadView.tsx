@@ -14,7 +14,7 @@ import React from "react";
 
 const fetchThread = async (slug: string | undefined) => {
   if (!slug) throw new Error("Missing slug");
-  const response = await fetch(`http://127.0.0.1:8000/api/threads`);
+  const response = await fetch(`http://127.0.0.1:8000/api/threads/`);
   if (!response.ok) throw new Error("Failed to fetch thread");
   const threads = await response.json();
   // Find the thread by slug, fallback to id = slug if numeric

@@ -97,12 +97,20 @@ export function Post({ thread: post }: ThreadProps) {
         </div>
         <div className="flex-1">
           <Link to={threadUrl}>
-            <h3 className="font-semibold mb-1 hover:underline">{post.title}</h3>
+            <h3 className="font-semibold text-gray-700 mb-1 hover:underline">{post.title}</h3>
           </Link>
-          
-          <PostContent content={content} />
-          <PostMedia media={post.media} />
-          
+            <div className="break-words text-base text-gray-600 sm:text-[1rem] leading-relaxed max-w-full overflow-x-auto" style={{ wordBreak: "break-word" }}>
+              <PostContent content={content} />
+            </div>
+            <div className="my-2 ">
+              {Array.isArray(post.media) && post.media.length > 0 && post.media[0].type !== "file" ? (
+                <PostMedia media={post.media} className="w-full max-w-xs h-auto object-contain rounded" />
+              ) : Array.isArray(post.media) && post.media.length > 0 ? (
+                <PostMedia media={post.media} className="w-full max-w-xs h-auto object-contain rounded" />
+              ) : (
+                <PostMedia media={post.media} className="w-full max-w-xs h-auto object-contain rounded" />
+              )}
+            </div>
           <div className="flex items-center gap-4 mb-2">
             <button
               onClick={toggleLike}
