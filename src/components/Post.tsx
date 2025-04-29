@@ -77,7 +77,7 @@ export function Post({ thread: post }: ThreadProps) {
       ? post.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
       : String(post.id);
 
-  const threadUrl = `/t/${threadSlug}`;
+  const threadUrl = `/threads/${threadSlug}`;
   const userUrl = post.user ? `/u/${post.user}` : "#";
   const commentsCount = (typeof post.comments_count === "number") ? post.comments_count : 0;
   const viewsCount =

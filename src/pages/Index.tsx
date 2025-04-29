@@ -1,14 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReedbossSidebar } from '@/components/ReedbossSidebar';
 import { RightSidebar } from '@/components/RightSidebar';
 import { TopNavbar } from '@/components/TopNavbar';
-import { LoginForm } from '@/components/LoginForm';
 import { Post } from '@/components/Post';
 import { Button } from '@/components/ui/button';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+
+interface IndexProps {
+  onOpenLoginDialog: () => void;
+}
 
 const fetchThreads = async () => {
   try {
@@ -31,9 +34,8 @@ const fetchThreads = async () => {
   }
 };
 
-const Index = () => {
+const Index = ({ onOpenLoginDialog }: IndexProps) => {
   const { user, isLoading: authLoading } = useAuth();
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { data: threads, isLoading: threadsLoading, error } = useQuery({
     queryKey: ['threads'],
     queryFn: fetchThreads,
@@ -46,25 +48,17 @@ const Index = () => {
     });
   }, []);
 
-  const openLoginDialog = () => {
-    setIsLoginOpen(true);
-  };
-
-  const closeLoginDialog = () => {
-    setIsLoginOpen(false);
-  };
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full flex-col">
-        <TopNavbar onOpenLoginDialog={openLoginDialog} />
+        <TopNavbar onOpenLoginDialog={onOpenLoginDialog} />
         <div className="flex flex-1">
           <ReedbossSidebar />
           <main className="flex-1 max-w-2xl w-full mx-auto p-4 md:p-6">
             {!user && (
               <div className="mb-6 p-4 bg-primary/5 rounded-lg">
                 <p className="mb-2">Want to interact with threads? Sign in to your account!</p>
-                <Button onClick={openLoginDialog}>
+                <Button onClick={onOpenLoginDialog}>
                   Sign In
                 </Button>
               </div>
@@ -93,7 +87,6 @@ const Index = () => {
           <RightSidebar />
         </div>
       </div>
-      <LoginForm isOpen={isLoginOpen} onClose={closeLoginDialog} />
     </SidebarProvider>
   );
 };

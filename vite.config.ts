@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Use this for SPA fallback in Vite 4+:
+    fs: {
+      strict: false,
+    },
   },
   plugins: [
     react(),
